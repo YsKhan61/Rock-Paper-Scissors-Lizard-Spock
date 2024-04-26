@@ -24,23 +24,17 @@ namespace RPSLS.Services
 
         private GameObject _audioParent;
 
-        protected override void Awake()
-        {
-            base.Awake();
-            StartCoroutine(SegregateAudioFiles());
-        }
-
-        private IEnumerator SegregateAudioFiles()
-        {
-            yield return null;
-            _audioAssetMap = audioReferences.ToDictionary(x => x.AudioTag, x => x);
-            _audioParent = new GameObject("AudioParent");
-            _audioParent.transform.SetParent(transform);
-        }
-
+        /// <summary>
+        /// Play an audio using the audio key.
+        /// </summary>
+        /// <param name="key"></param>
         internal void PlayAudio(string key) =>
             StartCoroutine(PlayRoutine(key));
 
+        /// <summary>
+        /// Stop an audio using the audio key.
+        /// </summary>
+        /// <param name="key"></param>
         internal void StopAudio(string key)
         {
             if (_loadedAudioMap.ContainsKey(key))
@@ -48,10 +42,30 @@ namespace RPSLS.Services
             else Debug.LogError($"Key {key} was not present");
         }
 
+        /// <summary>
+        /// Stop all audio.
+        /// </summary>
         internal void StopAllAudio()
         {
             foreach (var audioSource in _loadedAudioMap.Values)
                 audioSource.Stop();
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            StartCoroutine(SegregateAudioFiles());
+        }
+
+        protected override void RegisterService() =>
+            Bootstrap.RegisterService(this);
+
+        private IEnumerator SegregateAudioFiles()
+        {
+            yield return null;
+            _audioAssetMap = audioReferences.ToDictionary(x => x.AudioTag, x => x);
+            _audioParent = new GameObject("AudioParent");
+            _audioParent.transform.SetParent(transform);
         }
 
         private IEnumerator PlayRoutine(string key)
@@ -99,8 +113,5 @@ namespace RPSLS.Services
             var scriptDir = Path.Combine("Assets", "Scripts", "Audio", "AudioTags.cs");
             File.WriteAllText(scriptDir, builder.ToString());
         }
-
-        protected override void RegisterService() =>
-            Bootstrap.RegisterService(this);
     }
 }

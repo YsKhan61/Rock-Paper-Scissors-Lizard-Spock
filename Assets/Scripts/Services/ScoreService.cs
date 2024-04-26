@@ -9,9 +9,16 @@ namespace RPSLS.Services
         private int _currentScore;
         private GameplayHudScreen _hudScreen;
 
+        /// <summary>
+        /// Reset the current score to 0.
+        /// </summary>
         internal void ResetCurrentScore() =>
             _currentScore = 0;
 
+        /// <summary>
+        /// Increment the current score by the score step.
+        /// </summary>
+        /// <param name="scoreStep"></param>
         internal void IncrementCurrentScore(int scoreStep)
         {
             if (!_hudScreen)
@@ -21,11 +28,15 @@ namespace RPSLS.Services
             _hudScreen.UpdateCurrentScore(_currentScore);
         }
 
+        /// <summary>
+        /// Update the high score if the current score is greater than the high score.
+        /// </summary>
         internal void UpdateHighScore()
         {
             if (_currentScore > PlayerPrefsManager.HighScore)
                 PlayerPrefsManager.HighScore = _currentScore;
         }
+
 
         protected override void RegisterService() =>
             Bootstrap.RegisterService(this);

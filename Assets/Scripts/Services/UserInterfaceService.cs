@@ -9,6 +9,9 @@ namespace RPSLS.Services
         private EventSystem _currentEventSystem;
         private UserInterfaceBase _currentInterface;
 
+        /// <summary>
+        /// Get the current user interface.
+        /// </summary>
         internal UserInterfaceBase CurrentInterface
         {
             get => _currentInterface;
@@ -19,6 +22,10 @@ namespace RPSLS.Services
             }
         }
 
+        /// <summary>
+        /// Toggle the interactions of the current event system.
+        /// </summary>
+        /// <param name="enable">true to enable, false otherwise</param>
         internal void ToggleInteractions(bool enable) =>
             _currentEventSystem.enabled = enable;
 

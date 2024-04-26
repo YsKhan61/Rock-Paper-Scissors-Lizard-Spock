@@ -10,11 +10,17 @@ namespace RPSLS.Services
     {
         internal GameEnums.PlayableHandType CurrentPlayerSelection { get; set; }
 
+        /// <summary>
+        /// Reset the values of game state
+        /// </summary>
         internal void ResetValues()
         {
             CurrentPlayerSelection = GameEnums.PlayableHandType.None;
             StartCoroutine(ResetTimerRoutine());
         }
+
+        protected override void RegisterService() =>
+            Bootstrap.RegisterService(this);
 
         private IEnumerator ResetTimerRoutine()
         {
@@ -30,8 +36,5 @@ namespace RPSLS.Services
                 yield return eof;
             }
         }
-
-        protected override void RegisterService() =>
-            Bootstrap.RegisterService(this);
     }
 }
