@@ -24,19 +24,12 @@ namespace RPSLS.Services
 
         private Dictionary<string, AssetReference> _assetReferenceMap;
 
-        protected override void Awake()
-        {
-            base.Awake();
-            _assetReferenceMap = assetReferences
-                .ToDictionary(assets => assets.AssetKey,
-                    assets => assets.AssetReference);
-        }
-
-        private void OnValidate() =>
-            _assetReferenceMap = assetReferences
-                .ToDictionary(assets => assets.AssetKey,
-                    assets => assets.AssetReference);
-
+        /// <summary>
+        /// Load and instantiate an asset using the asset key.
+        /// </summary>
+        /// <param name="subAssetKey">key of the asset</param>
+        /// <param name="instantiationParameters">aditional parameters</param>
+        /// <returns>true if success, false otherwise</returns>
         internal bool LoadAndInstantiate(string subAssetKey, InstantiationParameters instantiationParameters)
         {
             if (!_assetReferenceMap.ContainsKey(subAssetKey))
@@ -62,6 +55,12 @@ namespace RPSLS.Services
             return true;
         }
 
+        /// <summary>
+        /// Load and instantiate an asset using the asset reference.
+        /// </summary>
+        /// <param name="asset">reference of the asset</param>
+        /// <param name="instantiationParameters">additional parameters</param>
+        /// <returns>true if success, false otherwise</returns>
         internal bool LoadAndInstantiate(AssetReference asset, InstantiationParameters instantiationParameters)
         {
             if (!asset.RuntimeKeyIsValid())
@@ -82,6 +81,13 @@ namespace RPSLS.Services
             return true;
         }
 
+        /// <summary>
+        /// Load and instantiate an asset using the asset reference of type T.
+        /// </summary>
+        /// <typeparam name="T">the type of the asset reference</typeparam>
+        /// <param name="asset">the asset reference to load and instantiate</param>
+        /// <param name="instantiationParameters">additional parameters</param>
+        /// <returns>true if success, false otherwise</returns>
         internal bool LoadAndInstantiate<T>(AssetReferenceT<T> asset, InstantiationParameters instantiationParameters)
             where T : Object
         {
@@ -102,6 +108,23 @@ namespace RPSLS.Services
 
             return true;
         }
+
+        protected override void RegisterService() =>
+            Bootstrap.RegisterService(this);
+
+        protected override void Awake()
+        {
+            base.Awake();
+            _assetReferenceMap = assetReferences
+                .ToDictionary(assets => assets.AssetKey,
+                    assets => assets.AssetReference);
+        }
+
+        private void OnValidate() =>
+            _assetReferenceMap = assetReferences
+                .ToDictionary(assets => assets.AssetKey,
+                    assets => assets.AssetReference);
+
 
         private void LoadAndSpawnAsset(AssetReference assetReference, InstantiationParameters parameters)
         {
@@ -155,9 +178,6 @@ namespace RPSLS.Services
         }
 
         private void OnApplicationQuit() =>
-            Resources.UnloadUnusedAssets(); // Force check to release the memory
-
-        protected override void RegisterService() =>
-            Bootstrap.RegisterService(this);
+            Resources.UnloadUnusedAssets(); // Force check to release the memory        
     }
 }

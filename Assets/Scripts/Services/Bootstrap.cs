@@ -16,9 +16,9 @@ namespace RPSLS.Services
         private readonly Dictionary<Type, ServiceBase> _serviceMap = new Dictionary<Type, ServiceBase>();
 
         /// <summary>
-        /// Registers a service to the service map.
+        /// Registers a service to the service map using a service type.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">the type of service</typeparam>
         /// <param name="service"></param>
         internal static void RegisterService<T>(T service) where T : ServiceBase
         {
@@ -38,10 +38,10 @@ namespace RPSLS.Services
         }
 
         /// <summary>
-        /// Gets a service from the service map.
+        /// Gets a service from the service map using a service type.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
+        /// <typeparam name="T">the type of the service needed</typeparam>
+        /// <returns> the service instance of the given type </returns>
         internal static T GetService<T>() where T : ServiceBase =>
             BootstrapInstance._serviceMap[typeof(T)] as T;
     }
