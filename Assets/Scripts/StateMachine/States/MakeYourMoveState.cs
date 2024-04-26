@@ -8,6 +8,10 @@ namespace RPSLS.StateMachine.States
 {
     public class MakeYourMoveState : StateBase
     {
+        /// <summary>
+        /// Initialize the state.
+        /// </summary>
+        /// <returns></returns>
         internal override IEnumerator Initialise()
         {
             var fsmService = Bootstrap.GetService<StateMachineService>();

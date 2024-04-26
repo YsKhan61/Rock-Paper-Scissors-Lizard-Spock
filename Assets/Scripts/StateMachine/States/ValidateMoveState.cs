@@ -13,6 +13,10 @@ namespace RPSLS.StateMachine.States
     {
         private bool? _currentResult;
 
+        /// <summary>
+        /// Initialize the state.
+        /// </summary>
+        /// <returns></returns>
         internal override IEnumerator Initialise()
         {
             var interfaceService = Bootstrap.GetService<UserInterfaceService>();
@@ -36,6 +40,10 @@ namespace RPSLS.StateMachine.States
             yield return fsmService.StartCoroutine(Perform());
         }
 
+        /// <summary>
+        /// Perform the state.
+        /// </summary>
+        /// <returns></returns>
         internal override IEnumerator Perform()
         {
             var fsmService = Bootstrap.GetService<StateMachineService>();
@@ -75,8 +83,8 @@ namespace RPSLS.StateMachine.States
             }
 
             var cpuSelectedOption = (GameEnums.PlayableHandType) Random.Range(1, 6);
-            var playerHand = PlayableHandBase.FromPlayableType(playerSelectedType);
-            var cpuHand = PlayableHandBase.FromPlayableType(cpuSelectedOption);
+            var playerHand = PlayableHandBase.FormPlayableHand(playerSelectedType);
+            var cpuHand = PlayableHandBase.FormPlayableHand(cpuSelectedOption);
             var result = playerHand.CheckWinAgainstOtherHand(cpuHand, out var message);
 
             hudScreen.UpdateCPUTurnSprite(cpuSelectedOption);

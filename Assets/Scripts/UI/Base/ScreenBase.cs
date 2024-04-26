@@ -16,13 +16,58 @@ namespace RPSLS.UI.Base
         [Header("Optional")] [SerializeField] private ScreenBase overrideNextScreen;
         [SerializeField] private ScreenBase overridePreviousScreen;
 
-        protected virtual void Awake() => InitializeScreen();
+        /// <summary>
+        /// When the back key is pressed.
+        /// </summary>
+        public abstract void OnBackKeyPressed();
 
-        protected virtual void OnDestroy()
+        /// <summary>
+        /// Activate previous screen of this screen
+        /// </summary>
+        /// <param name="disableCurrent">if true, deactivate this screen, false otherwise</param>
+        internal void PreviousScreen(bool disableCurrent)
         {
+            if (!currentInterfaceManager)
+            {
+                Debug.LogWarning("Interface Manager is not yet Initialised!".ToColoredString(Color.red));
+                return;
+            }
+
+            if (!overridePreviousScreen)
+                currentInterfaceManager.ActivatePreviousScreen(this, disableCurrent);
+            else currentInterfaceManager.ActivateThisScreen(overridePreviousScreen, disableCurrent);
         }
 
+        /// <summary>
+        /// Activate next screen of this screen
+        /// </summary>
+        /// <param name="disableCurrent">if true, deactivate this screen, false otherwise</param>
+        internal void NextScreen(bool disableCurrent)
+        {
+            if (!currentInterfaceManager)
+            {
+                Debug.LogWarning("Interface Manager is not yet Initialised!".ToColoredString(Color.red));
+                return;
+            }
+
+            if (!overrideNextScreen)
+                currentInterfaceManager.ActivateNextScreen(this, disableCurrent);
+            else currentInterfaceManager.ActivateThisScreen(overrideNextScreen, disableCurrent);
+        }
+
+        /// <summary>
+        /// Is this screen enabled?
+        /// </summary>
         internal bool IsScreenEnabled => _screenCanvas.enabled && _screenRaycaster.enabled;
+
+        /// <summary>
+        /// Set the specified screen as the next screen of this screen
+        /// </summary>
+        /// <param name="screen">specified screen</param>
+        internal void SetOverridePreviousScreen(ScreenBase screen) =>
+            overridePreviousScreen = screen;
+
+        protected virtual void Awake() => InitializeScreen();
 
         protected virtual void InitializeScreen()
         {
@@ -30,9 +75,6 @@ namespace RPSLS.UI.Base
             _screenRaycaster = GetComponent<GraphicRaycaster>();
             currentInterfaceManager = GetComponentInParent<UserInterfaceBase>();
         }
-
-        internal void SetOverridePreviousScreen(ScreenBase screen) =>
-            overridePreviousScreen = screen;
 
         protected internal virtual void EnableScreen()
         {
@@ -52,34 +94,6 @@ namespace RPSLS.UI.Base
             if (_screenRaycaster is { })
                 _screenRaycaster.enabled = false;
             else Debug.LogWarning($"{name} Raycaster Null".ToColoredString(Color.red));
-        }
-
-        public abstract void OnBackKeyPressed();
-
-        internal void PreviousScreen(bool disableCurrent)
-        {
-            if (!currentInterfaceManager)
-            {
-                Debug.LogWarning("Interface Manager is not yet Initialised!".ToColoredString(Color.red));
-                return;
-            }
-
-            if (!overridePreviousScreen)
-                currentInterfaceManager.ActivatePreviousScreen(this, disableCurrent);
-            else currentInterfaceManager.ActivateThisScreen(overridePreviousScreen, disableCurrent);
-        }
-
-        internal void NextScreen(bool disableCurrent)
-        {
-            if (!currentInterfaceManager)
-            {
-                Debug.LogWarning("Interface Manager is not yet Initialised!".ToColoredString(Color.red));
-                return;
-            }
-
-            if (!overrideNextScreen)
-                currentInterfaceManager.ActivateNextScreen(this, disableCurrent);
-            else currentInterfaceManager.ActivateThisScreen(overrideNextScreen, disableCurrent);
-        }
+        }  
     }
 }

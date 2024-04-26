@@ -8,6 +8,10 @@ namespace RPSLS.StateMachine.States
 {
     public class PlayState : StateBase
     {
+        /// <summary>
+        /// Initialize the state.
+        /// </summary>
+        /// <returns></returns>
         internal override IEnumerator Initialise()
         {
             Bootstrap.GetService<UserInterfaceService>()
@@ -15,6 +19,10 @@ namespace RPSLS.StateMachine.States
             yield return Bootstrap.GetService<StateMachineService>().StartCoroutine(Perform());
         }
 
+        /// <summary>
+        /// Perform the state.
+        /// </summary>
+        /// <returns></returns>
         internal override IEnumerator Perform()
         {
             yield return new WaitForSeconds(.5F);

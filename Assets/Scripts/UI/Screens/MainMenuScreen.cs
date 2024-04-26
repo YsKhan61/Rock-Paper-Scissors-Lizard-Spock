@@ -26,6 +26,40 @@ namespace RPSLS.UI.Screens
             "R.P.S.L.<size=\"250\">S</size>",
         };
 
+        /// <summary>
+        /// Start the game on button UI clicked.
+        /// </summary>
+        public void PlayGame()
+        {
+            Bootstrap.GetService<AudioService>().PlayAudio(AudioTags.BUTTON_TAP);
+            Bootstrap.GetService<StateMachineService>().CurrentFsm.SetState(new PlayState());
+        }
+
+        /// <summary>
+        /// Toggle the info panel on button UI clicked.
+        /// </summary>
+        /// <param name="enable"></param>
+        public void ToggleInfoPanel(bool enable)
+        {
+            Bootstrap.GetService<AudioService>().PlayAudio(AudioTags.BUTTON_TAP);
+            infoPanel.SetActive(enable);
+        }
+
+        /// <summary>
+        /// Exit the game on button UI clicked.
+        /// </summary>
+        public void ExitGame()
+        {
+            Bootstrap.GetService<AudioService>().PlayAudio(AudioTags.BUTTON_TAP);
+            Bootstrap.GetService<StateMachineService>().CurrentFsm.SetState(new FinalState());
+        }
+
+        /// <summary>
+        /// On back key pressed.
+        /// </summary>
+        public override void OnBackKeyPressed() =>
+            PreviousScreen(false);
+
         protected internal override void EnableScreen()
         {
             base.EnableScreen();
@@ -38,27 +72,6 @@ namespace RPSLS.UI.Screens
             base.DisableScreen();
             if (_titleCoroutine != null) StopCoroutine(_titleCoroutine);
         }
-
-        public void PlayGame()
-        {
-            Bootstrap.GetService<AudioService>().PlayAudio(AudioTags.BUTTON_TAP);
-            Bootstrap.GetService<StateMachineService>().CurrentFsm.SetState(new PlayState());
-        }
-
-        public void ToggleInfoPanel(bool enable)
-        {
-            Bootstrap.GetService<AudioService>().PlayAudio(AudioTags.BUTTON_TAP);
-            infoPanel.SetActive(enable);
-        }
-
-        public void ExitGame()
-        {
-            Bootstrap.GetService<AudioService>().PlayAudio(AudioTags.BUTTON_TAP);
-            Bootstrap.GetService<StateMachineService>().CurrentFsm.SetState(new FinalState());
-        }
-
-        public override void OnBackKeyPressed() =>
-            PreviousScreen(false);
 
         private void UpdateHighScore() =>
             highScoreTextTmp.text = $"High Score    '{PlayerPrefsManager.HighScore}'";

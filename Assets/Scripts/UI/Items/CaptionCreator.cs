@@ -14,17 +14,21 @@ namespace RPSLS.UI.Items
 
         private Vector3 _start, _end;
 
+        /// <summary>
+        /// Translate the caption text from start to end.
+        /// </summary>
+        /// <param name="caption"></param>
+        internal void TranslateCaptionText(string caption)
+        {
+            captionTextTmp.text = caption;
+            StartCoroutine(TranslationRoutine());
+        }
+
         private void Awake()
         {
             _start = startPoint.position;
             _end = endPoint.position;
             captionTextTmp.transform.position = _start;
-        }
-
-        internal void TranslateCaptionText(string caption)
-        {
-            captionTextTmp.text = caption;
-            StartCoroutine(TranslationRoutine());
         }
 
         private IEnumerator TranslationRoutine()

@@ -8,13 +8,18 @@ namespace RPSLS.StateMachine.Base
         protected StateBase CurrentState;
         private readonly MonoBehaviour _referencedBehaviour;
 
-        protected StateMachineBase(MonoBehaviour referencedBehaviour) =>
-            _referencedBehaviour = referencedBehaviour;
-
+        /// <summary>
+        /// Set the current state of the state machine.
+        /// </summary>
+        /// <param name="newState"></param>
         internal void SetState(StateBase newState)
         {
             CurrentState = newState;
             _referencedBehaviour.StartCoroutine(CurrentState.Initialise());
         }
+
+        protected StateMachineBase(MonoBehaviour referencedBehaviour) =>
+            _referencedBehaviour = referencedBehaviour;
+
     }
 }

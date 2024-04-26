@@ -33,6 +33,72 @@ namespace RPSLS.UI.Screens
         private List<PlayableItemUI> _playableOptions;
         private Vector3 _initialCpuHandPos;
 
+        /// <summary>
+        /// On back key pressed.
+        /// </summary>
+        public override void OnBackKeyPressed() =>
+            PreviousScreen(true);
+
+        /// <summary>
+        /// Show the countdown timer by starting a coroutine.
+        /// </summary>
+        /// <returns></returns>
+        internal Coroutine ShowCountdownTimer() =>
+            StartCoroutine(CountdownRoutine());
+
+        /// <summary>
+        /// Update the time bar value.
+        /// </summary>
+        /// <param name="val"></param>
+        internal void UpdateTimeBar(float val) =>
+            timeBar.Value = val;
+
+        /// <summary>
+        /// Update the current score.
+        /// </summary>
+        /// <param name="score"></param>
+        internal void UpdateCurrentScore(int score) =>
+            currentScoreTmp.text = $"Current Score '{score}'";
+
+        /// <summary>
+        /// Set the player option type.
+        /// </summary>
+        /// <param name="handType">which playable hand is set</param>
+        internal void SetPlayerOptionType(GameEnums.PlayableHandType handType) =>
+            _playableOptions.ForEach(item => item.ToggleScale(item.HandType == handType));
+
+        /// <summary>
+        /// Show the outcome message.
+        /// </summary>
+        /// <param name="message"></param>
+        internal void ShowOutcomeMessage(string message)
+        {
+            gameCaptions.TranslateCaptionText(message);
+            Debug.LogError(message.ToColoredString(Color.green));
+        }
+
+        /// <summary>
+        /// Update the CPU turn sprite.
+        /// </summary>
+        /// <param name="handType"></param>
+        internal void UpdateCPUTurnSprite(GameEnums.PlayableHandType handType) =>
+            cpuHandImg.sprite = handType == GameEnums.PlayableHandType.None
+                ? iconSprites[5]
+                : GetIconSprite(handType);
+
+        /// <summary>
+        /// Show the vignette effect
+        /// </summary>
+        /// <param name="hasPlayerWon"></param>
+        internal void ShowVignette(bool? hasPlayerWon) =>
+            StartCoroutine(VignetteRoutine(hasPlayerWon));
+
+        /// <summary>
+        /// Show the bounce effect on CPU hand.
+        /// </summary>
+        internal void BounceCpuHand() =>
+            StartCoroutine(BounceRoutine());
+
         protected override void InitializeScreen()
         {
             base.InitializeScreen();
@@ -56,41 +122,6 @@ namespace RPSLS.UI.Screens
                 if (item) item.ToggleScale(false);
             });
         }
-
-        public override void OnBackKeyPressed() =>
-            PreviousScreen(true);
-
-        internal Coroutine ShowCountdownTimer() =>
-            StartCoroutine(CountdownRoutine());
-
-        internal void UpdateTimeBar(float val) =>
-            timeBar.Value = val;
-
-        internal void UpdateCurrentScore(int score) =>
-            currentScoreTmp.text = $"Current Score '{score}'";
-
-        internal void SetPlayerOptionType(GameEnums.PlayableHandType handType) =>
-            _playableOptions.ForEach(item => item.ToggleScale(item.HandType == handType));
-
-        internal void ShowOutcomeMessage(string message)
-        {
-            gameCaptions.TranslateCaptionText(message);
-            Debug.LogError(message.ToColoredString(Color.green));
-        }
-
-        internal void UpdateCPUTurnSprite(GameEnums.PlayableHandType handType) =>
-            cpuHandImg.sprite = handType == GameEnums.PlayableHandType.None
-                ? iconSprites[5]
-                : GetIconSprite(handType);
-
-        internal void ShowVignette(bool? hasPlayerWon) =>
-            StartCoroutine(VignetteRoutine(hasPlayerWon));
-
-        internal void BounceCpuHand() =>
-            StartCoroutine(BounceRoutine());
-
-        private void OnApplicationQuit() =>
-            DePopulatePlayerOptions();
 
         private void PopulatePlayerOptions()
         {
@@ -195,5 +226,8 @@ namespace RPSLS.UI.Screens
                 GameEnums.PlayableHandType.Spock => iconSprites[4],
                 _ => null
             };
+
+        private void OnApplicationQuit() =>
+            DePopulatePlayerOptions();
     }
 }

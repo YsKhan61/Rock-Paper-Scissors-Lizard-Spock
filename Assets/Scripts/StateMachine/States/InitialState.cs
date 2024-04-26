@@ -9,6 +9,10 @@ namespace RPSLS.StateMachine.States
 {
     public class InitialState : StateBase
     {
+        /// <summary>
+        /// Initialize the state.
+        /// </summary>
+        /// <returns></returns>
         internal override IEnumerator Initialise()
         {
             yield return null;
